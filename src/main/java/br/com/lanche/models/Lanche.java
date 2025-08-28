@@ -51,7 +51,8 @@ public class Lanche {
 
     @Override
     public String toString() {
-        return "Nome: " + nome + "\n" +
+        return "Id: " + id + "\n" +
+                "Nome: " + nome + "\n" +
                 "Preço: " + preco + "\n" +
                 "Imagens: " + caminhoImagem;
     }

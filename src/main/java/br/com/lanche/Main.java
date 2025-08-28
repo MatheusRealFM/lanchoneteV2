@@ -2,8 +2,10 @@ package br.com.lanche;
 
 import br.com.lanche.applications.LancheApplication;
 import br.com.lanche.facades.LancheFacade;
+import br.com.lanche.interfaces.LancheRepository;
 import br.com.lanche.models.Lanche;
-import br.com.lanche.repositories.LancheRepository;
+import br.com.lanche.repositories.LancheRepositoryFirebase;
+import br.com.lanche.repositories.LancheRepositoryImpl;
 import br.com.lanche.services.LancheService;
 
 import java.io.File;
@@ -11,16 +13,16 @@ import java.io.IOException;
 import java.util.Scanner;
 
 public class Main {
-    private static LancheRepository lancheRepository;
+    private static LancheRepository lancheRepositoryImpl;
     private static LancheService lancheService;
     private static LancheApplication lancheApplication;
     private static LancheFacade lancheFacade;
     private static Scanner scanner;
 
     public static void injetarDependencias() {
-        lancheRepository = new LancheRepository();
+        lancheRepositoryImpl = new LancheRepositoryFirebase();
         lancheService = new LancheService();
-        lancheApplication = new LancheApplication(lancheRepository, lancheService);
+        lancheApplication = new LancheApplication(lancheRepositoryImpl, lancheService);
         lancheFacade = new LancheFacade(lancheApplication);
         scanner = new Scanner(System.in);
     }
@@ -49,19 +51,19 @@ public class Main {
     public static void cadastrarLanche() throws IOException {
         System.out.println("ID do produto: ");
         int id = scanner.nextInt();
+        scanner.nextLine();
 
         System.out.println("Nome do produto: ");
-        scanner.nextLine();
         String nome = scanner.nextLine();
 
         System.out.println("Valor do produto: ");
-        double preco = scanner.nextFloat();
+        double preco = scanner.nextDouble();
+        scanner.nextLine();
 
         String caminhoImagem;
 
         do {
             System.out.print("Digite o caminho completo da imagem (ex: C:\\pasta\\hamburguer.jpg): ");
-            scanner.nextLine();
             caminhoImagem = scanner.nextLine();
 
             if (!new File(caminhoImagem).exists()) {
@@ -70,8 +72,51 @@ public class Main {
         } while (!new File(caminhoImagem).exists());
 
         Lanche lanche = new Lanche(id, nome, preco, caminhoImagem);
-        lancheFacade.adicionar(lanche);
+        lancheApplication.adicionar(lanche);
     }
+
+    public static void atualizarLanche() throws IOException {
+        System.out.println("ID do produto que será editado: ");
+        int id = scanner.nextInt();
+        scanner.nextLine();
+
+        System.out.println("Novo Nome do produto: ");
+        String nome = scanner.nextLine();
+
+        System.out.println("Novo Preco do produto: ");
+        double preco = scanner.nextDouble();
+        scanner.nextLine();
+
+        System.out.println("Novo Caminho Imagem: ");
+        String caminhoImagem = scanner.nextLine();
+
+        Lanche lanche = new Lanche(0, nome, preco, caminhoImagem);
+
+        lancheFacade.atualizar(id, lanche);
+    }
+
+    public static void excluirLanche() throws IOException {
+        System.out.println("ID do produto que será excluído: ");
+        int id = scanner.nextInt();
+
+        lancheFacade.excluir(id);
+    }
+
+    public static void venderLanche() throws IOException {
+        System.out.println("ID do produto que será vendido: ");
+        int id = scanner.nextInt();
+        scanner.nextLine();
+
+        System.out.println("Quantidade que será vendida: ");
+        int quantidade = scanner.nextInt();
+        scanner.nextLine();
+
+        Lanche lanche = lancheFacade.buscarPorId(id);
+
+        double total = lancheFacade.calcularTotal(lanche, quantidade);
+        System.out.println("Total do lanche: " + total);
+    }
+
 
     public static void iniciarSistema() throws IOException {
         int opcaoMenu = -1;
@@ -89,13 +134,13 @@ public class Main {
                     cadastrarLanche();
                     break;
                 case 3:
-
+                    atualizarLanche();
                     break;
                 case 4:
-
+                    excluirLanche();
                     break;
                 case 5:
-
+                    venderLanche();
                     break;
                 default:
                     break;

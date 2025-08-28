@@ -17,20 +17,20 @@ public class LancheFacade {
         return this.lancheApplication.buscarTodos();
     }
 
-    public Lanche buscarPorId(Lanche lanche) throws IOException {
-        return this.lancheApplication.buscarPorId(lanche);
+    public Lanche buscarPorId(int id) throws IOException {
+        return this.lancheApplication.buscarPorId(id);
     }
 
     public void adicionar(Lanche lanche) throws IOException {
         this.lancheApplication.adicionar(lanche);
     }
 
-    public void excluir(Lanche lanche) throws IOException {
-        this.lancheApplication.excluir(lanche);
+    public void excluir(int id) throws IOException {
+        this.lancheApplication.excluir(id);
     }
 
     public void atualizar(int id, Lanche lanche) throws IOException {
-        this.lancheApplication.atualizar(lanche.getId(), lanche);
+        this.lancheApplication.atualizar(id, lanche);
     }
 
     public double calcularTotal(Lanche lanche, int quantidade) {

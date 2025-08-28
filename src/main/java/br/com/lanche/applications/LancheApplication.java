@@ -1,7 +1,7 @@
 package br.com.lanche.applications;
 
+import br.com.lanche.interfaces.LancheRepository;
 import br.com.lanche.models.Lanche;
-import br.com.lanche.repositories.LancheRepository;
 import br.com.lanche.services.LancheService;
 
 import java.io.IOException;
@@ -20,8 +20,8 @@ public class LancheApplication {
         return this.lancheRepository.buscarTodos();
     }
 
-    public Lanche buscarPorId(Lanche lanche) throws IOException {
-        return this.lancheRepository.buscarPorId(lanche.getId());
+    public Lanche buscarPorId(int id) throws IOException {
+        return this.lancheRepository.buscarPorId(id);
     }
 
     public void adicionar(Lanche lanche) throws IOException {
@@ -29,12 +29,12 @@ public class LancheApplication {
         this.lancheService.salvarImagem(lanche);
     }
 
-    public void excluir(Lanche lanche) throws IOException {
-        this.lancheRepository.excluir(lanche.getId());
+    public void excluir(int id) throws IOException {
+        this.lancheRepository.excluir(id);
     }
 
     public void atualizar(int id, Lanche lanche) throws IOException {
-        this.lancheRepository.atualizar(lanche.getId(), lanche);
+        this.lancheRepository.atualizar(id, lanche);
     }
 
     public double calcularTotal(Lanche lanche, int quantidade) {
